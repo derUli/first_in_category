@@ -1,9 +1,9 @@
 {
 	"id": "first_in_category",
-	"version": "1.0",
+	"version": "1.1",
 	"description": "Category Functions for UliCMS",
 	"categories": [
 		"development"
 	],
-	"compatible_from": "2017.4"
+	"compatible_from": "2019.2.7"
 }

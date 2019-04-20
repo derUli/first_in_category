@@ -6,7 +6,7 @@ class FirstInCategory extends Controller {
 			$language = getCurrentLanguage ();
 		}
 		$query = Database::pQuery ( "select id, access from `{prefix}content` where active = ?
-						  and category = ? and language = ? limit 1", array (
+						  and category_id = ? and language = ? limit 1", array (
 				1,
 				intval ( $category_id ),
 				$language 
