@@ -4,7 +4,7 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
 
     public function setUp() {
         Database::query("delete from `{prefix}categories` where name = 'my_category'", true);
-        Database::query("delete from `{prefix}content` where systemname = 'my_title' or systemname = 'my_list' or systemname = 'systemname'", true);
+        Database::query("delete from `{prefix}content` where slug = 'my_title' or slug = 'my_list' or slug = 'slug'", true);
     }
 
     public function tearDown() {
@@ -34,7 +34,7 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
         $originalPage1->access = "all";
         $originalPage1->language = "de";
         $originalPage1->title = "my_page";
-        $originalPage1->systemname = "my_title";
+        $originalPage1->slug = "my_title";
         $originalPage1->category_id = $category->getID();
 
         $originalPage1->author_id = $this->getFirstUserId();
@@ -44,7 +44,7 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
 
         $originalPage2 = new Page ();
         $originalPage2->title = "my_page";
-        $originalPage2->systemname = "my_title";
+        $originalPage2->slug = "my_title";
         $originalPage2->menu = "none";
         $originalPage2->access = "all";
         $originalPage2->language = "en";
@@ -72,7 +72,7 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
         $originalPage1->access = "all";
         $originalPage1->language = "de";
         $originalPage1->title = "my_page";
-        $originalPage1->systemname = "my_title";
+        $originalPage1->slug = "my_title";
         $originalPage1->category_id = $category->getID();
 
         $originalPage1->author_id = $this->getFirstUserId();
@@ -82,7 +82,7 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
 
         $originalPage2 = new Page ();
         $originalPage2->title = "my_page";
-        $originalPage2->systemname = "my_title";
+        $originalPage2->slug = "my_title";
         $originalPage2->menu = "none";
         $originalPage2->access = "all";
         $originalPage2->language = "en";
@@ -95,7 +95,7 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
         $listPage = new Content_List();
 
         $listPage->title = "my_list";
-        $listPage->systemname = "my_title";
+        $listPage->slug = "my_title";
         $listPage->menu = "my_list";
         $listPage->access = "all";
         $listPage->language = "de";
