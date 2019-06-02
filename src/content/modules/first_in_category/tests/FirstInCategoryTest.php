@@ -1,5 +1,7 @@
 <?php
 
+use UliCMS\Models\Content\Category;
+
 class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
 
     public function setUp() {
