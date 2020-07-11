@@ -2,36 +2,50 @@
 
 use UliCMS\Models\Content\Category;
 
-class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
-
-    public function setUp() {
+class FirstInCategoryTest extends \PHPUnit\Framework\TestCase
+{
+    protected function setUp(): void
+    {
+        $_SESSION = [];
         Database::query("delete from `{prefix}categories` where name = 'my_category'", true);
         Database::query("delete from `{prefix}content` where slug = 'my_title' or slug = 'my_list' or slug = 'slug'", true);
     }
 
-    public function tearDown() {
+    protected function tearDown(): void
+    {
+        $_SESSION = [];
         $this->setUp();
     }
 
-    private function getFirstUserId() {
+    private function getFirstUserId()
+    {
         $manager = new UserManager();
         $users = $manager->getAllUsers();
         $first = $users[0];
         return $first->getId();
     }
 
-    private function getFirstGroupId() {
+    private function getFirstGroupId()
+    {
         $groups = Group::getAll();
         $first = $groups[0];
         return $first->getId();
     }
 
-    public function testGetFirstPageInCategory() {
+    public function testGetFirstPageInCategoryReturnsNull()
+    {
+        $firstInCategory = ModuleHelper::getMainController("first_in_category");
+        $this->assertNull(
+            $firstInCategory->getFirstPageInCategory(PHP_INT_MAX, "de")
+        );
+    }
 
-        $category = new Category ();
+    public function testGetFirstPageInCategoryReturnsPage()
+    {
+        $category = new Category();
         $category->setName("my_category");
         $category->save();
-        $originalPage1 = new Page ();
+        $originalPage1 = new Page();
         $originalPage1->menu = "none";
         $originalPage1->access = "all";
         $originalPage1->language = "de";
@@ -44,7 +58,7 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
 
         $originalPage1->save();
 
-        $originalPage2 = new Page ();
+        $originalPage2 = new Page();
         $originalPage2->title = "my_page";
         $originalPage2->slug = "my_title";
         $originalPage2->menu = "none";
@@ -57,7 +71,8 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
 
         $originalPage2->save();
         $firstInCategory = ModuleHelper::getMainController("first_in_category");
-        $page = $firstInCategory->getFirstPageInCategory($category->getID(), "de");
+        $_SESSION["language"] = "de";
+        $page = $firstInCategory->getFirstPageInCategory($category->getID());
         $this->assertEquals($originalPage1->getID(), $page->id);
         $this->assertEquals($originalPage1->title, "my_page");
         $page = $firstInCategory->getFirstPageInCategory($category->getID(), "en");
@@ -65,11 +80,13 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($originalPage1->title, "my_page");
     }
 
-    public function testGetFirstListWithCategory() {
-        $category = new Category ();
+    public function testGetFirstListWithCategoryReturnsPage()
+    {
+        $category = new Category();
         $category->setName("my_category");
         $category->save();
-        $originalPage1 = new Page ();
+        
+        $originalPage1 = new Page();
         $originalPage1->menu = "none";
         $originalPage1->access = "all";
         $originalPage1->language = "de";
@@ -82,12 +99,12 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
 
         $originalPage1->save();
 
-        $originalPage2 = new Page ();
+        $originalPage2 = new Page();
         $originalPage2->title = "my_page";
         $originalPage2->slug = "my_title";
         $originalPage2->menu = "none";
         $originalPage2->access = "all";
-        $originalPage2->language = "en";
+        $originalPage2->language = "de";
         $originalPage2->category_id = $category->getID();
 
         $originalPage2->author_id = $this->getFirstUserId();
@@ -113,5 +130,14 @@ class FirstInCategoryTest extends \PHPUnit\Framework\TestCase {
         $list = $firstInCategory->getFirstListWithCategory($category->getID(), "de");
         $this->assertEquals($listPage->id, $list->id);
     }
+    public function testGetFirstListWithCategoryReturnsNull()
+    {
+        $firstInCategory = ModuleHelper::getMainController("first_in_category");
 
+        $_SESSION["language"] = "it";
+        
+        $this->assertNull(
+            $firstInCategory->getFirstListWithCategory(PHP_INT_MAX)
+        );
+    }
 }
